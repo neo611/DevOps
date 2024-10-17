@@ -30,7 +30,6 @@ jobs:
 
       # 如果测试成功，合并 Pull Request
       - name: Merge Pull Request
-        permissions: write-all
         if: success()  # 只有当上一步测试通过时才执行
         uses: actions/github-script@v5
         with:
