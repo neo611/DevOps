@@ -1,5 +1,8 @@
 name: tests
-on: push
+on:
+  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
   run_tests:
     runs-on: ubuntu-latest
@@ -18,3 +21,27 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Run tests with Maven
         run: mvn -B test --file pom.xml
+  auto_merge_pr:
+    # 仅在 pull_request 事件且测试通过后运行
+    if: github.event_name == 'pull_request' && success()
+    runs-on: ubuntu-latest
+    needs: run_tests  # 确保在 tests 任务成功后执行
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+          # 合并 PR
+      - name: Merge Pull Request
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const repo = context.repo.repo;
+            const pull_number = context.payload.pull_request.number;
+            
+            await github.rest.pulls.merge({
+              owner,
+              repo,
+              pull_number,
+              merge_method: 'squash'
+            });
