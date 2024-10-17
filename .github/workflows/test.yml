@@ -15,6 +15,7 @@ on:
       types:
         - submitted
     status: { }
+permissions: write-all
 jobs:
   run_tests:
     runs-on: ubuntu-latest
