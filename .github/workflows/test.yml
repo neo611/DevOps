@@ -26,14 +26,12 @@ jobs:
     if: github.event_name == 'pull_request' && success()
     runs-on: ubuntu-latest
     needs: run_tests  # 确保在 tests 任务成功后执行
-    permissions:
-      pull-requests: write  # 为 GITHUB_TOKEN 设置合适的权限
-      contents: write       # 确保有权限执行合并操作
+    permissions: write-all
     steps:
       - name: automerge
         uses: "pascalgn/automerge-action@v0.16.4"
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT  }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
           MERGE_LABELS: ""
           MERGE_METHOD: "squash"
           MERGE_COMMIT_MESSAGE: "automatic"
