@@ -30,18 +30,14 @@ jobs:
       pull-requests: write  # 为 GITHUB_TOKEN 设置合适的权限
       contents: write       # 确保有权限执行合并操作
     steps:
-      - name: Merge Pull Request
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.PAT }}  # 使用自定义的 PAT 而不是 GITHUB_TOKEN
-          script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const pull_number = context.payload.pull_request.number;
-            
-            await github.rest.pulls.merge({
-              owner,
-              repo,
-              pull_number,
-              merge_method: 'squash'
-            });
+      - name: automerge
+        uses: "pascalgn/automerge-action@v0.16.4"
+        env:
+          github-token: ${{ secrets.GITHUB_TOKEN  }}
+          MERGE_LABELS: ""
+          MERGE_METHOD: "squash"
+          MERGE_COMMIT_MESSAGE: "automatic"
+          MERGE_FORKS: "true"
+          MERGE_RETRIES: "50"
+          MERGE_RETRY_SLEEP: "10000"
+          UPDATE_METHOD: "rebase"
