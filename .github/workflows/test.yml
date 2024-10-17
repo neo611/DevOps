@@ -20,24 +20,16 @@ on:
 jobs:
   automerge:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
-
-      # 使用自定义的 PAT_TOKEN，而不是覆盖 GITHUB_TOKEN
-      - name: Merge Pull Request
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.TEST2 }}  # 直接使用自定义的 PAT
-          script: |
-            const owner = context.repo.owner;
-            const repo = context.repo.repo;
-            const pull_number = context.payload.pull_request.number;
-            
-            await github.rest.pulls.merge({
-              owner,
-              repo,
-              pull_number,
-              merge_method: 'squash'
-            });
+      - name: automerge
+        uses: "pascalgn/automerge-action@v0.16.4"
+        env:
+          GITHUB_TOKEN: "${{ secrets.TEST2 }}"
+          MERGE_LABELS: ""
+          MERGE_METHOD: "squash"
+          MERGE_COMMIT_MESSAGE: "automatic"
+          MERGE_FORKS: "true"
+          MERGE_RETRIES: "50"
+          MERGE_RETRY_SLEEP: "10000"
+          MERGE_REQUIRED_APPROVALS: "1"
+          UPDATE_METHOD: "rebase"
