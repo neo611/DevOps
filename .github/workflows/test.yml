@@ -33,7 +33,7 @@ jobs:
       - name: automerge
         uses: "pascalgn/automerge-action@v0.16.4"
         env:
-          github-token: ${{ secrets.GITHUB_TOKEN  }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
           MERGE_LABELS: ""
           MERGE_METHOD: "squash"
           MERGE_COMMIT_MESSAGE: "automatic"
